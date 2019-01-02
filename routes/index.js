@@ -159,4 +159,26 @@ router.post('/register', function(req, res){
   })
 
 })
+router.post('/login', function(req, res){
+  var email = req.body.email;
+  var password = req.body.password;
+
+  connection.query('select id from users where email=? and password=?', [email, password], function (err, results){
+    if(err){
+      return res.json({
+        message: err.message
+      })
+    }else if(results.length>0){
+      return res.json({
+        message: 'ok',
+        user: results[0]
+      })
+    }else{
+      return res.json({
+        message: 'gak mantul'
+      })
+    }
+  })
+  })
+})
 module.exports = router;
