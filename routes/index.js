@@ -135,9 +135,19 @@ router.post('/register', function(req, res){
             message: er.message
           })
         }else{
-          return res.json({
-            status: 'ok'
+          connection.query('select * from users where email=? and password =?' , [email, password], function(err, result){
+            if (err){
+              return res.json({
+                message: err.message
+              })
+            }else{
+              return res.json({
+                status: 'ok',
+                user: result 
+              })  
+            }
           })
+          
         }
         
       })
