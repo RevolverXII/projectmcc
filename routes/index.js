@@ -16,6 +16,18 @@ router.get('/', function(req, res, next) {
 router.get('/create', function (req, res) {
   connection.query('DROP TABLE courses');
   connection.query('DROP TABLE usercourses');
+  connection.query('DROP TABLE users');
+  connection.query('CREATE TABLE users(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255), phone VARCHAR(255), fbid VARCHAR(255))', function (err, results){
+    
+    if(err){
+      return res.json({
+        message: err.message
+      })
+    }
+    else{
+      connection.query("INSERT INTO users(email, password) VALUES('a@a.a', 'a')");
+    }
+  })
   connection.query('CREATE TABLE usercourses(id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, course_id INT)', function (err, results) {
     if(err){
       return res.json({
@@ -108,4 +120,33 @@ router.post('/assign_courses', function (req, res){
   })
 })
 
+router.post('/register', function(req, res){
+  var name = req.body.name;
+  var email = req.body.email;
+  var password = req.body.password;
+  var phone = req.body.phone;
+  var fbid = req.body.fbid;
+
+  connection.query('SELECT * FROM users WHERE email=?', [email], function(err, result){
+    if(result.length === 0){
+      connection.query('INSERT INTO users(name, email, password, phone, fbid) VALUES (?,?,?,?,?)', [name, email, password, phone, fbid], function(er, results){
+        if (er){
+          return res.json({
+            message: er.message
+          })
+        }else{
+          return res.json({
+            status: 'ok'
+          })
+        }
+        
+      })
+    }else{
+      return res.json({
+        status: 'error regis'
+      })
+    }
+  })
+
+})
 module.exports = router;
