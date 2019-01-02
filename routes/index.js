@@ -72,7 +72,7 @@ router.get('/courses', function (req, res) {
 
 router.post('/user_courses', function (req,res) {
   var userid = req.body.userid
-  connection.query('SELECT c.id, main_course, course_name, description FROM usercourses uc JOIN courses c ON uc.course_id = c.id WHERE user_id=?', [userid], function(err, results){
+  connection.query('SELECT c.id, main_course, course_name, description, link FROM usercourses uc JOIN courses c ON uc.course_id = c.id WHERE user_id=?', [userid], function(err, results){
     if(err){
       return res.json({
         message: err.message
